@@ -1011,3 +1011,30 @@ MotionCor3 1.2.1 [05-14-2025]
    1) FindCtf/CFindDefocus2D: The B-factor has been dropped from 40 to 16
       to include more high-frequency information. This has been found more
       accurate in the estimation of small phase shift in LPP.
+
+MotionCor3 1.2.2 [05-19-2025]
+-----------------------------
+1. Bug Fix:
+2: Changes:
+   1) makefile11: add compute capability 9.0 for H100 and H200.
+   2) Added CSaveMovieDone.cpp to track what movie files have been processed.
+
+MotionCor3 1.2.3 [05-27-2025]
+-----------------------------
+1. Bug Fix:
+   1) EerUtil/CLoadEerFrames: using unsigned int for movies containing large
+      number of frames (signed integer overflow).
+2. Changes:
+   1) Added support for EER compression 61002.
+
+MotionCor3 1.2.4 [08-27-2025]
+-----------------------------
+1. Bug Fix:
+   1) Dose weighted images are aberrated whereas the unweighted images are fine.
+      The bug is in Correct/CCorrectFullShift::mUnpadSums. In its call to
+      mEstimateCtf, which calles FindCtf/CFindCtfMain::DoIt. CFindCtfMain::DoIt
+      calls CResacleImage.cpp where it calls pBufPool->GetForwardFFT(0) and
+      pBufPool->GetInverseFFT(0). These two FFT instance are actuall called
+      in CCorrectFullShift::mUnpadSums with different FFT sizes.
+      Fix: In FindCtf/CRescaleImage.cpp, create its own CCufft2D objects instead
+      retrieving from CBufferPool.
