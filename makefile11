@@ -151,8 +151,7 @@ CUFLAG = -Xptxas -dlcm=ca -O2 \
 	-gencode arch=compute_87,code=sm_87 \
 	-gencode arch=compute_86,code=sm_86 \
 	-gencode arch=compute_80,code=sm_80 \
-	-gencode arch=compute_75,code=sm_75 \
-	-gencode arch=compute_70,code=sm_70
+	-gencode arch=compute_75,code=sm_75
 #------------------------------------------
 cuda: $(CUCPPS)
 
@@ -164,7 +163,7 @@ exe: $(OBJS)
 	-L$(CUDALIB) \
 	-L$(CONDA)/lib \
 	-L/usr/lib64 \
-	-lcufft -lcudart -lcuda -lnvToolsExt -ltiff -lc -lm -lpthread \
+	-lcufft -lcudart -lcuda -ltiff -lc -lm -lpthread \
 	-o MotionCor3
 	@echo MotionCor3 has been generated.
 
@@ -172,12 +171,14 @@ exe: $(OBJS)
 	@echo "-----------------------------------------------"
 	@$(NVCC) -cuda -cudart shared \
 		$(CUFLAG) -I$(PRJINC) \
+		-I$(CUDAINC)/nvtx3 \
 		-I$(CONDA)/include $< -o $@
 	@echo $< has been compiled.
 
 %.o: %.cpp
 	@echo "------------------------------------------------"
 	@$(CC) $(CFLAG) -I$(PRJINC) -I$(CUDAINC) \
+		-I$(CUDAINC)/nvtx3 \
 		-I$(CONDA)/include \
 		$< -o $@
 	@echo $< has been compiled.
